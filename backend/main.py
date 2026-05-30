@@ -3,12 +3,13 @@ from dotenv import load_dotenv
 
 from tools.attractions import getNearByAttractions
 from tools.currency import exchageRate
+from tools.flights import *
 
 load_dotenv()
 
 agent = create_agent(
     model="google_genai:gemini-3.1-flash-lite",
-    tools=[exchageRate,getNearByAttractions],
+    tools=[exchageRate,getFlightsBetweenAirports,getAirportsInCityOfCountry,getAirportsInCity,getAirportsInCountry],
     system_prompt="You are a super helpful, intelligent travel assistant")
 
 def getResult(input:str):
@@ -17,4 +18,4 @@ def getResult(input:str):
     )
     return (result["messages"][-1])
 
-print(getResult("What are the must visit places in tokyo?"))
+print(getResult("What are the possible flights routes available to travel from Banglore to Tokyo?"))
