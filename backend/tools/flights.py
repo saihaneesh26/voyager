@@ -4,9 +4,9 @@ from langchain.tools import tool
 from dataclasses import dataclass
 import random
 
-airlines = pd.read_csv("data/airlines.csv")
-routes = pd.read_csv("data/routes.csv")
-airports = pd.read_csv("data/airports.csv")
+airlines = pd.read_csv("backend/data/airlines.csv")
+routes = pd.read_csv("backend/data/routes.csv")
+airports = pd.read_csv("backend/data/airports.csv")
 
 @dataclass
 class Airport:

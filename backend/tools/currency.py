@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 
-
+@tool
 def exchageRate(country1:str, country2:str) -> float:
     """Gets the value of 1 unit of country1's currency in country2's currency. country1 and country2 is the country name"""   
     df = pd.read_csv("data/currency.csv")
