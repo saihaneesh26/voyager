@@ -7,7 +7,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://voyager-8tjk.onrender.com"],
+    allow_origins=["https://voyager-frontend-mjfj.onrender.com"],
     allow_credentials=True,
     allow_methods=["GET","OPTIONS"],
     allow_headers=["*"],
