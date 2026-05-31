@@ -9,7 +9,7 @@ Data
 * Near by attractions of a city
 
 UI
-![Home Screen](./screenshots/response.png)
+![Home Screen](./screenshots/home.png)
 
 Langsmith dashboard showing the invocation of attraction tool
 ![Langsmith](./screenshots/langsmith.png)
