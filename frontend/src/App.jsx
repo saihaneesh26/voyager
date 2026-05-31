@@ -2,6 +2,10 @@ import React, { useState, useRef, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { v4 as uuidv4 } from "uuid"
+import {
+  FaGithub,
+  FaLinkedin
+} from "react-icons/fa"
 import "./styles.css"
 
 export default function App() {
@@ -132,6 +136,28 @@ export default function App() {
 
           <div className="poweredText">
             Powered by Gemini AI
+          </div>
+          <div className="poweredText">
+            Developed by Haneesh
+          </div>
+           <div className="creatorLinks">
+
+            <a
+              href="https://linkedin.com/in/imsaihaneesh26"
+              target="_blank"
+              rel="noreferrer"
+              className="socialIcon"
+            >
+              <FaLinkedin />
+            </a>
+            <a
+              href="https://github.com/saihaneesh26/voyager"
+              target="_blank"
+              rel="noreferrer"
+              className="socialIcon"
+            >
+              <FaGithub />
+            </a>
           </div>
 
         </div>
