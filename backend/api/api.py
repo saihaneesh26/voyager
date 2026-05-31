@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from backend import main
+import main
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 
