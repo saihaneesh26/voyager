@@ -20,14 +20,6 @@ def home():
 @app.get("/query")
 def invokeAI(query: str, model: str, session_id:str):
     result = main.getResult(query, model, session_id)
-
-    message = result["messages"][-1]
-
-    if isinstance(message.content, list):
-        text = message.content[0]["text"]
-    else:
-        text = str(message.content)
-
-    return PlainTextResponse(text)
+    return PlainTextResponse(result)
 
     
