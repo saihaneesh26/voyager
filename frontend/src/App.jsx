@@ -17,7 +17,7 @@ export default function App() {
   const [selectedModel, setSelectedModel] =
     useState("gemini-2.5-flash")
 
-  const [threadId] =
+  const [sessionId] =
     useState(uuidv4())
 
   const chatEndRef = useRef(null)
@@ -45,64 +45,55 @@ export default function App() {
 
   const askAI = async () => {
 
-    if (!query.trim()) return
+  if (!query.trim()) return
 
-    const userMessage = {
-      role: "user",
-      content: query,
-    }
+  const currentQuery = query
+
+  setQuery("")
+
+  try {
+
+    const url =
+      `${import.meta.env.VITE_API_URL}` +
+      `/query?query=${encodeURIComponent(
+        currentQuery
+      )}` +
+      `&model=${selectedModel}` +
+      `&session_id=${sessionId}`
+
+    console.log("FETCH URL:", url)
+
+    const res = await fetch(url)
+
+    console.log("STATUS:", res.status)
+
+    console.log(
+      "CONTENT TYPE:",
+      res.headers.get("content-type")
+    )
+
+    const text = await res.text()
+
+    console.log("RAW RESPONSE:", text)
 
     setMessages((prev) => [
       ...prev,
-      userMessage,
+      {
+        role: "user",
+        content: currentQuery
+      },
+      {
+        role: "assistant",
+        content: text
+      }
     ])
 
-    const currentQuery = query
+  } catch (err) {
 
-    setQuery("")
+    console.error(err)
 
-    setLoading(true)
-
-    try {
-
-      const res = await fetch(
-        `http://127.0.0.1:8000/query?query=${encodeURIComponent(
-          currentQuery
-        )}&model=${selectedModel}&thread_id=${threadId}&session=${threadId}`
-      )
-
-      if (!res.ok) {
-        throw new Error(
-          "Failed to fetch response"
-        )
-      }
-
-      const data = await res.text()
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: data,
-        },
-      ])
-
-    } catch (err) {
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            "Something went wrong while fetching response.",
-        },
-      ])
-
-    } finally {
-      setLoading(false)
-    }
   }
-
+}
   // ============================================
   // ENTER KEY SUPPORT
   // ============================================

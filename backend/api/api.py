@@ -18,8 +18,8 @@ def home():
     return "HI"
 
 @app.get("/query")
-def invokeAI(query: str, model: str, session:str):
-    result = main.getResult(query, model, session)
+def invokeAI(query: str, model: str, session_id:str):
+    result = main.getResult(query, model, session_id)
 
     message = result["messages"][-1]
 

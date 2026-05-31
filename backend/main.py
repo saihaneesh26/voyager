@@ -1,14 +1,12 @@
 from langchain.agents import create_agent
 from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage
-from langchain_core.messages import AIMessage
 from backend.tools.attractions import getNearByAttractions
 from backend.tools.flights import *
 from backend.tools.currency import exchageRate
 
 load_dotenv()
 
-def getResult(input:str, model:str, session:str):
+def getResult(input:str, model:str, session_id:str):
     if input ==None or input == "":
         return "NO query requested"
     if model ==None or model == "":
