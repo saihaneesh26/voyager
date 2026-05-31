@@ -49,49 +49,56 @@ export default function App() {
 
   const currentQuery = query
 
+  // Add user message immediately
+  setMessages((prev) => [
+    ...prev,
+    {
+      role: "user",
+      content: currentQuery,
+    },
+  ])
+
   setQuery("")
+
+  setLoading(true)
 
   try {
 
-    const url =
-      `${import.meta.env.VITE_API_URL}` +
-      `/query?query=${encodeURIComponent(
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/query?query=${encodeURIComponent(
         currentQuery
-      )}` +
-      `&model=${selectedModel}` +
-      `&session_id=${sessionId}`
-
-    console.log("FETCH URL:", url)
-
-    const res = await fetch(url)
-
-    console.log("STATUS:", res.status)
-
-    console.log(
-      "CONTENT TYPE:",
-      res.headers.get("content-type")
+      )}&model=${selectedModel}&session_id=${sessionId}`
     )
 
-    const text = await res.text()
+    const data = await res.text()
 
-    console.log("RAW RESPONSE:", text)
+    console.log(data)
 
+    // Add assistant response
     setMessages((prev) => [
       ...prev,
       {
-        role: "user",
-        content: currentQuery
-      },
-      {
         role: "assistant",
-        content: text
-      }
+        content: data,
+      },
     ])
 
   } catch (err) {
 
     console.error(err)
 
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content:
+          "Something went wrong.",
+      },
+    ])
+
+  } finally {
+
+    setLoading(false)
   }
 }
   // ============================================
