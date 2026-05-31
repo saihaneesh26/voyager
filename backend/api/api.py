@@ -26,7 +26,7 @@ def invokeAI(query: str, model: str, session_id:str):
     if model not in modelCache :
         return "NO MODEL AVAILABLE"
 
-    result = modelCache[model].invoke({"messages": [{"role": "user","content": query}]}, config={"configurable": {"thread_id": session_id}})
+    result = modelCache.getAgent(model).invoke({"messages": [{"role": "user","content": query}]}, config={"configurable": {"thread_id": session_id}})
 
     message = result["messages"][-1]
 
