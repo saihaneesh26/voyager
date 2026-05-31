@@ -7,3 +7,9 @@ Data
 * Real time Currency conversion is fetched using exchangerate API
 * Flight routes are fetched using static data for this project. The information is stored as csv files in backen/data folder.
 * Near by attractions of a city
+
+UI
+![Home Screen](./screenshots/response.png)
+
+Langsmith dashboard showing the invocation of attraction tool
+![Langsmith](./screenshots/langsmith.png)
