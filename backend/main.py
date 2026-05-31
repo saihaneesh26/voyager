@@ -1,8 +1,8 @@
 from langchain.agents import create_agent
 from dotenv import load_dotenv
-from backend.tools.attractions import getNearByAttractions
-from backend.tools.flights import *
-from backend.tools.currency import exchageRate
+from tools.attractions import getNearByAttractions
+from tools.flights import *
+from tools.currency import exchageRate
 
 load_dotenv()
 
