@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import cache
+from api.cache import Cache
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 
@@ -13,7 +13,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-modelCache = cache()
+modelCache = Cache()
 
 @app.get("/")
 def home():
