@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import main
+import cache
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import PlainTextResponse
 
@@ -13,13 +13,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+modelCache = cache()
+
 @app.get("/")
 def home():
     return "HI"
 
 @app.get("/query")
 def invokeAI(query: str, model: str, session_id:str):
-    result = main.getResult(query, model, session_id)
-    return PlainTextResponse(result)
+    if query == None or query == "":
+        return "NO query requested"
+    if model not in modelCache :
+        return "NO MODEL AVAILABLE"
+
+    result = modelCache[model].invoke({"messages": [{"role": "user","content": query}]}, config={"configurable": {"thread_id": session_id}})
+
+    message = result["messages"][-1]
+
+    if isinstance(message.content, list):
+        return PlainTextResponse(message.content[0]["text"])
+
+    return PlainTextResponse(str(message.content))
 
     
