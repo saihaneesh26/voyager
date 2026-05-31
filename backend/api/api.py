@@ -22,11 +22,13 @@ def home():
 @app.get("/query")
 def invokeAI(query: str, model: str, session_id:str):
     if query == None or query == "":
-        return "NO query requested"
-    if model not in modelCache :
-        return "NO MODEL AVAILABLE"
+        return PlainTextResponse("NO AGENT SELECTED",status_code=400)
+    
+    agent = modelCache.getAgent(model)
 
-    result = modelCache.getAgent(model).invoke({"messages": [{"role": "user","content": query}]}, config={"configurable": {"thread_id": session_id}})
+    if agent is None:
+        return PlainTextResponse("NO MODEL AVAILABLE",status_code=400)
+    result = agent.invoke({"messages": [{"role": "user","content": query}]}, config={"configurable": {"thread_id": session_id}})
 
     message = result["messages"][-1]
 
