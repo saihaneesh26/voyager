@@ -9,7 +9,7 @@ Data
 * Near by attractions of a city
 
 UI
-![Home Screen](./screenshots/home.png)
+![Home Screen](./screenshots/homePageWithLogin.png)
 
 Output
 ![response](./screenshots/response.png)
