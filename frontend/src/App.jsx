@@ -1,114 +1,252 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, {
+  useState,
+  useRef,
+  useEffect,
+} from "react"
+
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { v4 as uuidv4 } from "uuid"
+
+import {
+  GoogleLogin,
+  googleLogout,
+} from "@react-oauth/google"
+
+import { jwtDecode } from "jwt-decode"
+
 import {
   FaGithub,
-  FaLinkedin
+  FaLinkedin,
 } from "react-icons/fa"
+
 import "./styles.css"
 
 export default function App() {
 
-  const [query, setQuery] = useState("")
+  // =========================================================
+  // SESSION
+  // =========================================================
 
-  const [loading, setLoading] =
-    useState(false)
+  const existingSession =
+    localStorage.getItem(
+      "voyager_session"
+    )
+
+  const sessionId =
+    existingSession ||
+    crypto.randomUUID()
+
+  localStorage.setItem(
+    "voyager_session",
+    sessionId
+  )
+
+  // =========================================================
+  // USER
+  // =========================================================
+
+  const [user, setUser] =
+    useState(
+
+      JSON.parse(
+        localStorage.getItem(
+          "voyager_user"
+        )
+      )
+    )
+
+  // =========================================================
+  // CHAT STATE
+  // =========================================================
+
+  const [query, setQuery] =
+    useState("")
 
   const [messages, setMessages] =
     useState([])
 
+  const [loading, setLoading] =
+    useState(false)
+
+  // =========================================================
+  // MODEL STATE
+  // =========================================================
+
   const [selectedModel, setSelectedModel] =
     useState("gemini-2.5-flash")
 
-  const [sessionId] =
-    useState(uuidv4())
+  const models = [
+    "gemini-2.5-flash",
+    "gemini-2.5-flash-lite",
+    "gemini-1.5-flash",
+  ]
+
+  // =========================================================
+  // REFS
+  // =========================================================
 
   const chatEndRef = useRef(null)
 
-  const models = [
-    "gemini-2.5-flash",
-    "gemini-3.5-flash",
-    "gemini-3.1-flash-lite",
-    "gemini-2.5-flash-lite",
-    "gemini-3.0-flash"    
-  ]
-
-  // ============================================
+  // =========================================================
   // AUTO SCROLL
-  // ============================================
+  // =========================================================
 
   useEffect(() => {
+
     chatEndRef.current?.scrollIntoView({
       behavior: "smooth",
     })
+
   }, [messages, loading])
 
-  // ============================================
+  // =========================================================
+  // GOOGLE LOGIN
+  // =========================================================
+
+  const handleLoginSuccess = (
+    credentialResponse
+  ) => {
+
+    const decoded = jwtDecode(
+      credentialResponse.credential
+    )
+
+    localStorage.setItem(
+
+      "voyager_user",
+
+      JSON.stringify(decoded)
+    )
+
+    setUser(decoded)
+  }
+
+  // =========================================================
+  // LOGOUT
+  // =========================================================
+
+  const handleLogout = () => {
+
+    googleLogout()
+
+    localStorage.removeItem(
+      "voyager_user"
+    )
+
+    setUser(null)
+
+    setMessages([])
+
+    setQuery("")
+  }
+
+  // =========================================================
+  // NEW CHAT
+  // =========================================================
+
+  const createNewChat = () => {
+
+    const newSession =
+      crypto.randomUUID()
+
+    localStorage.setItem(
+      "voyager_session",
+      newSession
+    )
+
+    window.location.reload()
+  }
+
+  // =========================================================
   // ASK AI
-  // ============================================
+  // =========================================================
 
   const askAI = async () => {
 
-  if (!query.trim()) return
+    if (!user) {
+      alert("Please login first")
+      return
+    }
 
-  const currentQuery = query
+    if (!query.trim()) return
 
-  // Add user message immediately
-  setMessages((prev) => [
-    ...prev,
-    {
-      role: "user",
-      content: currentQuery,
-    },
-  ])
+    const currentQuery = query
 
-  setQuery("")
+    // USER MESSAGE
 
-  setLoading(true)
-
-  try {
-
-    const res = await fetch(
-      `${import.meta.env.VITE_API_URL}/query?query=${encodeURIComponent(
-        currentQuery
-      )}&model=${selectedModel}&session_id=${sessionId}`
-    )
-
-    const data = await res.text()
-
-    console.log(data)
-
-    // Add assistant response
     setMessages((prev) => [
+
       ...prev,
+
       {
-        role: "assistant",
-        content: data,
+        role: "user",
+        content: currentQuery,
       },
     ])
 
-  } catch (err) {
+    setQuery("")
 
-    console.error(err)
+    setLoading(true)
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        role: "assistant",
-        content:
-          "Something went wrong.",
-      },
-    ])
+    try {
 
-  } finally {
+      const response = await fetch(
 
-    setLoading(false)
+        `${import.meta.env.VITE_API_URL}/query` +
+
+        `?query=${encodeURIComponent(
+          currentQuery
+        )}` +
+
+        `&model=${selectedModel}` +
+
+        `&session_id=${sessionId}` +
+
+        `&email=${encodeURIComponent(
+          user.email
+        )}`
+
+      )
+
+      const data =
+        await response.text()
+
+      // ASSISTANT MESSAGE
+
+      setMessages((prev) => [
+
+        ...prev,
+
+        {
+          role: "assistant",
+          content: data,
+        },
+      ])
+
+    } catch (error) {
+
+      console.error(error)
+
+      setMessages((prev) => [
+
+        ...prev,
+
+        {
+          role: "assistant",
+          content:
+            "Something went wrong.",
+        },
+      ])
+
+    } finally {
+
+      setLoading(false)
+    }
   }
-}
-  // ============================================
-  // ENTER KEY SUPPORT
-  // ============================================
+
+  // =========================================================
+  // ENTER SUPPORT
+  // =========================================================
 
   const handleKeyDown = (e) => {
 
@@ -116,17 +254,28 @@ export default function App() {
       e.key === "Enter" &&
       !e.shiftKey
     ) {
+
       e.preventDefault()
+
       askAI()
     }
   }
 
+  // =========================================================
+  // UI
+  // =========================================================
+
   return (
+
     <div className="chatApp">
 
-      {/* SIDEBAR */}
+      {/* =====================================================
+          SIDEBAR
+      ====================================================== */}
 
       <div className="sidebar">
+
+        {/* HEADER */}
 
         <div>
 
@@ -137,10 +286,14 @@ export default function App() {
           <div className="poweredText">
             Powered by Gemini AI
           </div>
+
           <div className="poweredText">
             Developed by Haneesh
           </div>
-           <div className="creatorLinks">
+
+          {/* SOCIALS */}
+
+          <div className="creatorLinks">
 
             <a
               href="https://linkedin.com/in/imsaihaneesh26"
@@ -150,6 +303,7 @@ export default function App() {
             >
               <FaLinkedin />
             </a>
+
             <a
               href="https://github.com/saihaneesh26/voyager"
               target="_blank"
@@ -158,9 +312,62 @@ export default function App() {
             >
               <FaGithub />
             </a>
+
+          </div>
+
+          {/* AUTH */}
+
+          <div className="authSection">
+
+            {!user ? (
+
+              <GoogleLogin
+
+                onSuccess={
+                  handleLoginSuccess
+                }
+
+                onError={() =>
+                  console.log(
+                    "Login Failed"
+                  )
+                }
+              />
+
+            ) : (
+
+              <div className="userProfile">
+
+                <img
+                  src={user.picture}
+                  alt={user.name}
+                  className="profileImage"
+                  referrerPolicy="no-referrer"
+                />
+
+                <div className="userName">
+                  {user.name}
+                </div>
+
+                <div className="userEmail">
+                  {user.email}
+                </div>
+
+                <button
+                  onClick={handleLogout}
+                  className="logoutButton"
+                >
+                  Logout
+                </button>
+
+              </div>
+            )}
+
           </div>
 
         </div>
+
+        {/* MODEL */}
 
         <div className="sidebarSection">
 
@@ -177,17 +384,23 @@ export default function App() {
               )
             }
           >
+
             {models.map((model) => (
+
               <option
                 key={model}
                 value={model}
               >
                 {model}
               </option>
+
             ))}
+
           </select>
 
         </div>
+
+        {/* STACK */}
 
         <div className="sidebarSection">
 
@@ -198,6 +411,10 @@ export default function App() {
           <div className="tagList">
 
             <div className="tag">
+              React
+            </div>
+
+            <div className="tag">
               FastAPI
             </div>
 
@@ -206,27 +423,48 @@ export default function App() {
             </div>
 
             <div className="tag">
+              Gemini AI
+            </div>
+
+            <div className="tag">
               OpenFlights
             </div>
 
             <div className="tag">
-              OpenStreetMap
+              OpenTripMap
             </div>
 
           </div>
+
+        </div>
+
+        {/* ACTIONS */}
+
+        <div className="sidebarSection">
+
+          <button
+            className="newChatButton"
+            onClick={createNewChat}
+          >
+            + New Chat
+          </button>
+
         </div>
 
       </div>
 
-      {/* MAIN CHAT */}
+      {/* =====================================================
+          CHAT
+      ====================================================== */}
 
       <div className="chatContainer">
 
-        {/* CHAT MESSAGES */}
+        {/* MESSAGES */}
 
         <div className="chatMessages">
 
           {messages.length === 0 && (
+
             <div className="emptyState">
 
               <h1>
@@ -290,6 +528,8 @@ export default function App() {
             )
           )}
 
+          {/* LOADING */}
+
           {loading && (
 
             <div className="messageRow assistantRow">
@@ -309,7 +549,7 @@ export default function App() {
 
         </div>
 
-        {/* INPUT AREA */}
+        {/* INPUT */}
 
         <div className="inputArea">
 

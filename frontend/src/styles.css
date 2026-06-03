@@ -39,8 +39,8 @@ select {
 
 .chatApp {
   display: flex;
-  height: 100vh;
   width: 100%;
+  height: 100vh;
   overflow: hidden;
 }
 
@@ -72,7 +72,9 @@ select {
 
 .poweredText {
   margin-top: 12px;
+
   color: #94a3b8;
+
   line-height: 1.6;
 }
 
@@ -81,11 +83,17 @@ select {
 }
 
 .sidebarTitle {
-  font-size: 15px;
-  color: #94a3b8;
   margin-bottom: 14px;
+
+  font-size: 15px;
   font-weight: 600;
+
+  color: #94a3b8;
 }
+
+/* =========================================================
+   TAGS
+========================================================= */
 
 .tagList {
   display: flex;
@@ -94,12 +102,12 @@ select {
 }
 
 .tag {
-  background: #111827;
-  border: 1px solid #334155;
-
   padding: 8px 12px;
 
   border-radius: 999px;
+  border: 1px solid #334155;
+
+  background: #111827;
 
   font-size: 13px;
 
@@ -107,25 +115,130 @@ select {
 }
 
 /* =========================================================
-   MODEL DROPDOWN
+   MODEL SELECT
 ========================================================= */
 
 .modelDropdown {
   width: 100%;
 
-  background: #111827;
-
-  border: 1px solid #334155;
-
-  color: white;
-
   padding: 14px;
 
+  border: 1px solid #334155;
   border-radius: 14px;
+
+  background: #111827;
+
+  color: white;
 
   outline: none;
 
   font-size: 14px;
+}
+
+/* =========================================================
+   AUTH
+========================================================= */
+
+.authSection {
+  margin-top: 24px;
+}
+
+.userProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.profileImage {
+  width: 56px;
+  height: 56px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+.userName {
+  text-align: center;
+
+  font-size: 14px;
+
+  color: white;
+
+  word-break: break-word;
+}
+
+.userEmail {
+  text-align: center;
+
+  font-size: 12px;
+
+  color: #94a3b8;
+
+  word-break: break-word;
+}
+
+.logoutButton {
+  padding: 10px 16px;
+
+  border: 1px solid #ffffff20;
+  border-radius: 12px;
+
+  background: #ffffff10;
+
+  color: white;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.logoutButton:hover {
+  background: #ffffff20;
+}
+
+/* =========================================================
+   SOCIALS
+========================================================= */
+
+.creatorLinks {
+  display: flex;
+
+  gap: 14px;
+
+  margin-top: 18px;
+}
+
+.socialIcon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+  border: 1px solid #334155;
+
+  background: #111827;
+
+  color: white;
+
+  text-decoration: none;
+
+  font-size: 20px;
+
+  transition: all 0.2s ease;
+}
+
+.socialIcon:hover {
+  background: #2563eb;
+
+  transform: translateY(-2px);
 }
 
 /* =========================================================
@@ -136,7 +249,6 @@ select {
   flex: 1;
 
   display: flex;
-
   flex-direction: column;
 
   background: #0f172a;
@@ -183,28 +295,25 @@ select {
 
   padding: 24px 32px;
 
+  font-size: 16px;
   line-height: 1.8;
 
-  font-size: 16px;
-
   word-break: break-word;
-
   overflow-wrap: break-word;
 }
 
 .userBubble {
-  background: #2563eb;
-
-  color: white;
+  max-width: 700px;
 
   border-radius: 24px;
 
-  max-width: 700px;
+  background: #2563eb;
+
+  color: white;
 }
 
 .assistantBubble {
   background: transparent;
-
   color: white;
 }
 
@@ -233,18 +342,16 @@ select {
   margin: auto;
 
   display: flex;
+  align-items: flex-end;
 
   gap: 16px;
 
-  align-items: flex-end;
-
-  background: #111827;
+  padding: 18px;
 
   border: 1px solid #334155;
-
   border-radius: 24px;
 
-  padding: 18px;
+  background: #111827;
 }
 
 .chatInput {
@@ -252,8 +359,12 @@ select {
 
   resize: none;
 
-  border: none;
+  min-height: 28px;
+  max-height: 180px;
 
+  overflow-y: auto;
+
+  border: none;
   outline: none;
 
   background: transparent;
@@ -261,14 +372,7 @@ select {
   color: white;
 
   font-size: 16px;
-
   line-height: 1.7;
-
-  min-height: 28px;
-
-  max-height: 180px;
-
-  overflow-y: auto;
 }
 
 .chatInput::placeholder {
@@ -277,11 +381,11 @@ select {
 
 .sendButton {
   width: 48px;
-
   height: 48px;
 
-  border: none;
+  flex-shrink: 0;
 
+  border: none;
   border-radius: 50%;
 
   background: white;
@@ -289,14 +393,11 @@ select {
   color: black;
 
   font-size: 22px;
-
   font-weight: bold;
 
   cursor: pointer;
 
   transition: all 0.2s ease;
-
-  flex-shrink: 0;
 }
 
 .sendButton:hover {
@@ -316,23 +417,22 @@ select {
 
   margin: 120px auto;
 
-  text-align: center;
-
   padding: 40px;
+
+  text-align: center;
 }
 
 .emptyState h1 {
-  font-size: 58px;
-
   margin-bottom: 20px;
+
+  font-size: 58px;
 }
 
 .emptyState p {
-  color: #94a3b8;
-
+  font-size: 18px;
   line-height: 1.8;
 
-  font-size: 18px;
+  color: #94a3b8;
 }
 
 /* =========================================================
@@ -344,24 +444,23 @@ select {
 }
 
 .markdownBody h1 {
-  font-size: 42px;
   margin-bottom: 24px;
+
+  font-size: 42px;
 }
 
 .markdownBody h2 {
-  font-size: 32px;
-
   margin-top: 40px;
-
   margin-bottom: 20px;
+
+  font-size: 32px;
 }
 
 .markdownBody h3 {
-  font-size: 26px;
-
   margin-top: 30px;
-
   margin-bottom: 16px;
+
+  font-size: 26px;
 }
 
 .markdownBody p {
@@ -372,9 +471,9 @@ select {
 
 .markdownBody ul,
 .markdownBody ol {
-  padding-left: 28px;
-
   margin-bottom: 24px;
+
+  padding-left: 28px;
 }
 
 .markdownBody li {
@@ -386,11 +485,11 @@ select {
 }
 
 .markdownBody code {
-  background: #020617;
-
   padding: 4px 8px;
 
   border-radius: 8px;
+
+  background: #020617;
 
   word-break: break-word;
 }
@@ -398,104 +497,38 @@ select {
 .markdownBody pre {
   overflow-x: auto;
 
-  background: #020617;
+  margin-bottom: 20px;
 
   padding: 18px;
 
   border-radius: 16px;
 
-  margin-bottom: 20px;
+  background: #020617;
 }
 
 .markdownBody table {
   width: 100%;
 
-  border-collapse: collapse;
-
-  margin: 28px 0;
+  display: block;
 
   overflow-x: auto;
 
-  display: block;
+  margin: 28px 0;
+
+  border-collapse: collapse;
 }
 
 .markdownBody th,
 .markdownBody td {
-  border: 1px solid #334155;
-
   padding: 14px;
+
+  border: 1px solid #334155;
 
   text-align: left;
 }
 
 .markdownBody th {
   background: #111827;
-}
-
-/* =========================================================
-   ABOUT SECTION
-========================================================= */
-
-.aboutCard {
-  background: #111827;
-
-  border: 1px solid #334155;
-
-  border-radius: 18px;
-
-  padding: 18px;
-
-  margin-top: 12px;
-}
-
-.aboutCard h3 {
-  font-size: 20px;
-
-  margin-bottom: 12px;
-}
-
-.aboutCard p {
-  color: #cbd5e1;
-
-  line-height: 1.7;
-
-  font-size: 14px;
-
-  margin-bottom: 18px;
-}
-
-.aboutLinks {
-  display: flex;
-
-  gap: 12px;
-
-  margin-bottom: 18px;
-}
-
-.aboutLinks a {
-  text-decoration: none;
-
-  color: #60a5fa;
-
-  font-size: 14px;
-
-  font-weight: 600;
-}
-
-.aboutLinks a:hover {
-  text-decoration: underline;
-}
-
-.aboutTech {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 10px;
-
-  color: #e2e8f0;
-
-  font-size: 14px;
 }
 
 /* =========================================================
